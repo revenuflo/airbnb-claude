@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="Costa del Sol Scorecard" name="apple-mobile-web-app-title"/>
+<meta content="default" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="#ffffff" name="theme-color"/>
+<title>Airbnb Costa del Sol Scorecard</title>
+<style>
+:root {
+  --colors-canvas: #ffffff;
+  --colors-surface-soft: #f7f7f7;
+  --colors-surface-strong: #f2f2f2;
+  --colors-ink: #222222;
+  --colors-body: #3f3f3f;
+  --colors-muted: #6a6a6a;
+  --colors-muted-soft: #929292;
+  --colors-hairline: #dddddd;
+  --colors-hairline-soft: #ebebeb;
+  --colors-border-strong: #c1c1c1;
+  --colors-primary: #ff385c;
+  --colors-primary-active: #e00b41;
+  --colors-primary-disabled: #ffd1da;
+  --colors-on-primary: #ffffff;
+  --colors-success: #008a05;
+  --colors-warning: #e07912;
+  --colors-error: #c13515;
+  --rounded-sm: 8px;
+  --rounded-md: 14px;
+  --rounded-lg: 20px;
+  --rounded-xl: 32px;
+  --rounded-full: 9999px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-base: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  --spacing-section: 64px;
+  --shadow-airbnb: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0, rgba(0, 0, 0, 0.10) 0 4px 8px 0;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--colors-canvas); }
+body {
+  margin: 0;
+  font-family: "Airbnb Cereal VF", Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--colors-ink);
+  background: var(--colors-canvas);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--colors-primary); }
+.header {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 24px) var(--spacing-lg) var(--spacing-xl);
+  color: var(--colors-ink);
+  background: var(--colors-canvas);
+  position: relative;
+}
+.header::before {
+  content: "";
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--rounded-full);
+  background: var(--colors-primary);
+  box-shadow: inset 0 0 0 10px rgba(255,255,255,.16);
+  margin-bottom: var(--spacing-lg);
+}
+.header .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: fit-content;
+  color: var(--colors-muted);
+  font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+  background: var(--colors-surface-soft);
+  border: 1px solid var(--colors-hairline-soft);
+  border-radius: var(--rounded-full);
+  padding: 7px 12px;
+}
+.header h1 {
+  max-width: 840px;
+  margin: var(--spacing-base) 0 var(--spacing-md);
+  color: var(--colors-ink);
+  font-size: clamp(28px, 7vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+}
+.header p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--colors-body);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+  max-width: min(100%, 920px);
+  margin: 0 auto;
+  padding: var(--spacing-sm);
+  overflow-x: auto;
+  white-space: nowrap;
+  background: rgba(255,255,255,.96);
+  border: 1px solid var(--colors-hairline);
+  border-radius: var(--rounded-full);
+  box-shadow: var(--shadow-airbnb);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.sticky-nav::-webkit-scrollbar { display: none; }
+.sticky-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--rounded-full);
+  color: var(--colors-ink);
+  background: transparent;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1.29;
+  font-weight: 500;
+}
+.sticky-nav a:first-child,
+.sticky-nav a:hover {
+  background: var(--colors-surface-soft);
+  color: var(--colors-ink);
+}
+.sticky-nav a:last-child {
+  background: var(--colors-primary);
+  color: var(--colors-on-primary);
+}
+main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-section);
+}
+.section { margin: var(--spacing-section) 0; }
+.section:first-child { margin-top: var(--spacing-xl); }
+.section h2 {
+  margin: 0 0 var(--spacing-base);
+  color: var(--colors-ink);
+  font-size: 22px;
+  line-height: 1.18;
+  letter-spacing: -0.0275rem;
+  font-weight: 600;
+}
+.grid { display: grid; gap: var(--spacing-base); }
+.summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.metric,
+.callout,
+.table-wrap,
+.use,
+.tier,
+.property-card,
+.checklist {
+  background: var(--colors-canvas);
+  border: 1px solid var(--colors-hairline);
+  box-shadow: none;
+}
+.metric {
+  min-height: 116px;
+  border-radius: var(--rounded-md);
+  padding: var(--spacing-base);
+}
+.metric:hover { box-shadow: var(--shadow-airbnb); }
+.metric span:first-child {
+  display: block;
+  color: var(--colors-muted);
+  font-size: 12px;
+  line-height: 1.33;
+  font-weight: 600;
+}
+.metric b {
+  display: block;
+  margin-top: var(--spacing-xs);
+  color: var(--colors-ink);
+  font-size: 22px;
+  line-height: 1.18;
+  letter-spacing: -0.0275rem;
+  font-weight: 600;
+}
+.metric span:last-child {
+  display: block;
+  margin-top: var(--spacing-xs);
+  color: var(--colors-muted);
+  font-size: 14px;
+  line-height: 1.43;
+}
+.callout {
+  border-radius: var(--rounded-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-airbnb);
+  position: relative;
+  overflow: hidden;
+}
+.callout::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--colors-primary);
+}
+.callout h2 { margin-top: 0; }
+.callout p {
+  color: var(--colors-body);
+  line-height: 1.5;
+  margin: var(--spacing-md) 0 0;
+}
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--rounded-md);
+}
+table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 14px var(--spacing-base);
+  border-bottom: 1px solid var(--colors-hairline-soft);
+  text-align: left;
+  vertical-align: middle;
+  color: var(--colors-ink);
+  font-size: 14px;
+  line-height: 1.43;
+}
+th {
+  background: var(--colors-canvas);
+  color: var(--colors-muted);
+  font-size: 12px;
+  line-height: 1.33;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+td small {
+  display: block;
+  margin-top: 3px;
+  color: var(--colors-muted);
+  font-size: 13px;
+  line-height: 1.23;
+}
+tr:last-child td { border-bottom: none; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  border-radius: var(--rounded-full);
+  padding: 5px 10px;
+  font-size: 11px;
+  line-height: 1.18;
+  font-weight: 600;
+  color: var(--colors-ink);
+  background: var(--colors-surface-soft);
+  white-space: nowrap;
+}
+.pill.top { background: var(--colors-primary); color: var(--colors-on-primary); }
+.pill.strong { background: var(--colors-ink); color: var(--colors-on-primary); }
+.pill.consider { background: var(--colors-surface-soft); color: var(--colors-ink); border: 1px solid var(--colors-hairline); }
+.pill.skip { background: #fff8f6; color: var(--colors-error); border: 1px solid #ffd8d0; }
+.bar {
+  display: grid;
+  grid-template-columns: minmax(54px, 1fr) 28px;
+  gap: var(--spacing-sm);
+  align-items: center;
+  min-width: 88px;
+}
+.bar span {
+  display: block;
+  height: 6px;
+  border-radius: var(--rounded-full);
+  background: var(--colors-primary);
+}
+.bar b {
+  color: var(--colors-muted);
+  font-size: 12px;
+  line-height: 1.33;
+  font-weight: 600;
+}
+.score-mini {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md) var(--spacing-base);
+  margin: var(--spacing-base) 0;
+}
+.score-mini label {
+  color: var(--colors-muted);
+  font-size: 12px;
+  line-height: 1.33;
+  font-weight: 600;
+}
+.use-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.use {
+  border-radius: var(--rounded-md);
+  padding: var(--spacing-base);
+}
+.use:hover { box-shadow: var(--shadow-airbnb); }
+.use h3 {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--colors-muted);
+  font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+.use p { margin: var(--spacing-sm) 0 0; color: var(--colors-body); line-height: 1.43; }
+.use p strong { color: var(--colors-ink); font-weight: 600; }
+.tiers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--spacing-base); }
+.tier {
+  border-radius: var(--rounded-md);
+  padding: var(--spacing-base);
+}
+.tier h3 { margin: 0 0 var(--spacing-sm); font-size: 16px; line-height: 1.25; font-weight: 600; }
+.tier ul { margin: 0; padding-left: 18px; color: var(--colors-body); }
+.tier li { margin: var(--spacing-sm) 0; line-height: 1.43; }
+.property-card {
+  border-radius: var(--rounded-md);
+  overflow: hidden;
+  margin-bottom: var(--spacing-lg);
+  box-shadow: none;
+}
+.property-card:hover { box-shadow: var(--shadow-airbnb); }
+.property-hero {
+  position: relative;
+  aspect-ratio: 1 / .72;
+  background: var(--colors-surface-soft);
+  overflow: hidden;
+}
+.property-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.property-hero::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  width: 38px;
+  height: 6px;
+  border-radius: var(--rounded-full);
+  background: rgba(255,255,255,.92);
+  box-shadow: 12px 0 0 rgba(255,255,255,.46), -12px 0 0 rgba(255,255,255,.46);
+}
+.rank-badge {
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 6px 11px;
+  color: var(--colors-ink);
+  background: var(--colors-canvas);
+  border-radius: var(--rounded-full);
+  font-size: 11px;
+  line-height: 1.18;
+  font-weight: 600;
+  box-shadow: var(--shadow-airbnb);
+}
+.property-body { padding: var(--spacing-lg); }
+.property-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-base);
+}
+.property-title-row h3 {
+  margin: 0;
+  color: var(--colors-ink);
+  font-size: 22px;
+  line-height: 1.18;
+  letter-spacing: -0.0275rem;
+  font-weight: 500;
+}
+.property-title-row p {
+  margin: var(--spacing-xs) 0 0;
+  color: var(--colors-muted);
+  font-size: 14px;
+  line-height: 1.43;
+}
+.score-circle {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--rounded-full);
+  display: grid;
+  place-items: center;
+  color: var(--colors-ink);
+  background: var(--colors-canvas);
+  border: 1px solid var(--colors-hairline);
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 700;
+  box-shadow: var(--shadow-airbnb);
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-sm);
+  margin: var(--spacing-base) 0;
+}
+.stats-grid span {
+  background: var(--colors-surface-soft);
+  border: 1px solid var(--colors-hairline-soft);
+  border-radius: var(--rounded-sm);
+  padding: var(--spacing-md);
+}
+.stats-grid b {
+  display: block;
+  color: var(--colors-ink);
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 600;
+}
+.stats-grid small {
+  display: block;
+  margin-top: 2px;
+  color: var(--colors-muted);
+  font-size: 13px;
+  line-height: 1.23;
+}
+.desc { color: var(--colors-body); line-height: 1.5; margin: var(--spacing-base) 0; }
+.amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-base) 0;
+}
+.amenity {
+  border-radius: var(--rounded-full);
+  padding: 7px 10px;
+  font-size: 12px;
+  line-height: 1.33;
+  font-weight: 600;
+}
+.amenity.yes { background: #f1faf2; color: var(--colors-success); }
+.amenity.no { background: var(--colors-surface-soft); color: var(--colors-muted); }
+details {
+  border-top: 1px solid var(--colors-hairline-soft);
+  padding-top: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+summary { cursor: pointer; color: var(--colors-ink); font-weight: 600; }
+.checklist { border-radius: var(--rounded-md); padding: var(--spacing-lg); }
+.checklist li, .notes-list li { margin: var(--spacing-sm) 0; color: var(--colors-body); line-height: 1.43; }
+.footer {
+  max-width: 1280px;
+  margin: 0 auto;
+  border-top: 1px solid var(--colors-hairline-soft);
+  color: var(--colors-muted);
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-lg) calc(env(safe-area-inset-bottom) + var(--spacing-xl));
+  font-size: 13px;
+  line-height: 1.23;
+}
+.muted-note {
+  color: var(--colors-muted);
+  font-size: 14px;
+  line-height: 1.43;
+  margin-top: -6px;
+}
+strong { font-weight: 600; }
+@media (max-width: 1128px) {
+  .summary-grid, .use-grid, .tiers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 744px) {
+  .header { padding: calc(env(safe-area-inset-top) + 20px) var(--spacing-base) var(--spacing-lg); }
+  .header::before { width: 30px; height: 30px; margin-bottom: var(--spacing-base); }
+  .header h1 { font-size: 32px; line-height: 1.1; }
+  .sticky-nav { margin: 0 var(--spacing-base); border-radius: var(--rounded-full); }
+  main { padding: var(--spacing-lg) var(--spacing-base) var(--spacing-section); }
+  .section { margin: var(--spacing-xl) 0; }
+  .summary-grid, .use-grid, .tiers { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .score-mini { grid-template-columns: 1fr; }
+  .property-title-row { flex-direction: column; }
+  .score-circle { width: auto; height: auto; border-radius: var(--rounded-sm); padding: 10px 14px; place-items: start; }
+  table { min-width: 720px; }
+  th, td { padding: 12px; }
+}
+@media print {
+  .sticky-nav { display: none; }
+  body { background: white; }
+  .property-card, .metric, .callout, .table-wrap, .use, .checklist { box-shadow: none !important; }
+}
+
+</style>
+<meta content="Airbnb-inspired Costa del Sol property scorecard for comparing 11 Airbnb listings." name="description"/></head>
+<body>
+<header class="header" id="top">
+<div class="eyebrow">Merged Airbnb Analysis Prompt v2</div>
+<h1>Costa del Sol Airbnb Scorecard</h1>
+<p>Mobile-first HTML/CSS report for comparing 11 Airbnb candidates for 5 adults from June 27 to July 4, 2026. Scores use visible listing price, not final Airbnb checkout totals.</p>
+</header>
+<nav class="sticky-nav">
+<a href="#summary">Summary</a><a href="#ranked">Ranked</a><a href="#scores">Scores</a><a href="#picks">Top Picks</a><a href="#properties">Properties</a><a href="#notes">Notes</a><a href="#verify">Verify</a>
+</nav>
+<main>
+<section class="section" id="summary">
+<div class="grid summary-grid"><div class="metric"><span>Listings</span><b>11</b><span>Final 11-property set</span></div><div class="metric"><span>Trip dates</span><b>Jun 27 – Jul 4, 2026</b><span>7 nights</span></div><div class="metric"><span>Guests</span><b>5 adults</b><span>0 children, infants, pets</span></div><div class="metric"><span>Top score</span><b>84.9</b><span>CYV - Perfect for a family getaway!</span></div><div class="metric"><span>Price range</span><b>$236–$441/night</b><span>Nightly visible listing price</span></div><div class="metric"><span>Total cost range</span><b>$1,655–$3,088</b><span>Visible 7-night listing total</span></div><div class="metric"><span>Review range</span><b>0–44</b><span>Review count</span></div></div>
+</section>
+<section class="section callout">
+<h2>Final recommendation</h2>
+<p><strong>CYV - Perfect for a family getaway!</strong> is the best overall pick because it combines the strongest v2 score, Fuengirola convenience, 5 beds, 3 bedrooms, 2 baths, a 5.00 rating, and 21 reviews. The main caveat is that the data does not show a free parking flag.</p>
+<p><strong>Beautiful townhouse with pool &amp; two terraces</strong> is the best value pick, but treat it as higher risk because it only has 2 reviews and likely requires some bed sharing for 5 adults.</p>
+</section>
+<section class="section" id="ranked">
+<h2>Ranked summary</h2>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>Property</th><th>$/night</th><th>Total cost</th><th>★</th><th>Reviews</th><th>Score</th><th>Tier</th></tr></thead><tbody><tr><td><strong>1</strong></td><td><a href="https://www.airbnb.com/rooms/1188349782094075289?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006275110537&amp;source_impression_id=p3_1778638798_P37wB_4qWjMAj5Jy&amp;previous_page_section_name=1000">CYV - Perfect for a family getaway!</a><small>Fuengirola · coastal / town-oriented</small></td><td>$314</td><td>$2,197</td><td>5.00</td><td>21</td><td><strong>84.9</strong></td><td><span class="pill top">💎 Top pick</span></td></tr><tr><td><strong>2</strong></td><td><a href="https://www.airbnb.com/rooms/1605105730916504202?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006307397512&amp;source_impression_id=p3_1778638798_P3Ut7S-YrzAA9AvJ&amp;previous_page_section_name=1000">Beautiful townhouse with pool &amp; two terraces</a><small>Urbanización Mijas Golf · inland golf / resort</small></td><td>$236</td><td>$1,655</td><td>5.00</td><td>2</td><td><strong>83.2</strong></td><td><span class="pill top">💎 Top pick</span></td></tr><tr><td><strong>3</strong></td><td><a href="https://www.airbnb.com/rooms/1278397911981871497?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006303525898&amp;source_impression_id=p3_1778638798_P3tA7DbF3445JjVe&amp;previous_page_section_name=1000">Niza6-Sea Views-3bedr-2bath-300Mb-Center</a><small>Fuengirola · coastal / town-oriented</small></td><td>$279</td><td>$1,952</td><td>4.75</td><td>8</td><td><strong>79.5</strong></td><td><span class="pill top">💎 Top pick</span></td></tr><tr><td><strong>4</strong></td><td><a href="https://www.airbnb.com/rooms/1424543657122979738?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006277953899&amp;source_impression_id=p3_1778638798_P3D-Qc9P966eso6k&amp;previous_page_section_name=1000">Casa Moret</a><small>Málaga · coastal / town-oriented</small></td><td>$268</td><td>$1,877</td><td>5.00</td><td>2</td><td><strong>78.1</strong></td><td><span class="pill strong">⭐ Strong contender</span></td></tr><tr><td><strong>5</strong></td><td><a href="https://www.airbnb.com/rooms/1460113447564258436?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006303528609&amp;source_impression_id=p3_1778638798_P39bCaJOCPok4OjC&amp;previous_page_section_name=1000">Malibu Mansions Grand SeaLine</a><small>Las Lagunas · inland golf / resort</small></td><td>$257</td><td>$1,802</td><td>4.77</td><td>31</td><td><strong>76.8</strong></td><td><span class="pill strong">⭐ Strong contender</span></td></tr><tr><td><strong>6</strong></td><td><a href="https://www.airbnb.com/rooms/1178909654309486711?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006307400625&amp;source_impression_id=p3_1778638798_P31dzMq10j6P39NX&amp;previous_page_section_name=1000">Balconies of Benalmádena - Seaviews Duplex Carvajal</a><small>Benalmádena · coastal / town-oriented</small></td><td>$314</td><td>$2,199</td><td>4.88</td><td>16</td><td><strong>71.4</strong></td><td><span class="pill strong">⭐ Strong contender</span></td></tr><tr><td><strong>7</strong></td><td><a href="https://www.airbnb.com/rooms/785201940144131637?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006307393870&amp;source_impression_id=p3_1778638798_P3y4TjIsLXLzyTit&amp;previous_page_section_name=1000">El Sembrador | Pool - terrace - pool table</a><small>Mijas · inland golf / resort</small></td><td>$308</td><td>$2,155</td><td>4.62</td><td>26</td><td><strong>70.3</strong></td><td><span class="pill consider">👍 Consider</span></td></tr><tr><td><strong>8</strong></td><td><a href="https://www.airbnb.com/rooms/750570804201491684?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006275103768&amp;source_impression_id=p3_1778638798_P3m8BB9JTYApGqgZ&amp;previous_page_section_name=1000">Palm Beach - Family Home, Pool, Stunning Sea Views</a><small>Fuengirola · coastal / town-oriented</small></td><td>$401</td><td>$2,807</td><td>4.84</td><td>44</td><td><strong>68.8</strong></td><td><span class="pill consider">👍 Consider</span></td></tr><tr><td><strong>9</strong></td><td><a href="https://www.airbnb.com/rooms/1595210191680500953?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006301446551&amp;source_impression_id=p3_1778638798_P33-2HGQH38qJ61o&amp;previous_page_section_name=1000">Modern 3 bedroom apt. with big terrace</a><small>Las Lagunas · inland / near Fuengirola</small></td><td>$281</td><td>$1,964</td><td>—</td><td>0</td><td><strong>67.5</strong></td><td><span class="pill consider">👍 Consider</span></td></tr><tr><td><strong>10</strong></td><td><a href="https://www.airbnb.com/rooms/1305534133273592582?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006307402963&amp;source_impression_id=p3_1778638798_P3F8DxPDjja-vPaJ&amp;previous_page_section_name=1000">Marbella Coastal Paradise</a><small>Ojén · inland golf / resort</small></td><td>$350</td><td>$2,450</td><td>4.89</td><td>9</td><td><strong>62.8</strong></td><td><span class="pill skip">⏭ Skip</span></td></tr><tr><td><strong>11</strong></td><td><a href="https://www.airbnb.com/rooms/1081643090971595034?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006303510568&amp;source_impression_id=p3_1778638798_P36WCkIFL1eoovjR&amp;previous_page_section_name=1000">Ref: 272 Luxury semidetached property near La Cala</a><small>Mijas · inland golf / resort</small></td><td>$441</td><td>$3,088</td><td>4.92</td><td>13</td><td><strong>54.4</strong></td><td><span class="pill skip">⏭ Skip</span></td></tr></tbody></table></div>
+</section>
+<section class="section" id="scores">
+<h2>Score breakdown</h2>
+<div class="table-wrap"><table><thead><tr><th>Property</th><th>Price</th><th>Trust</th><th>Fit</th><th>Loc</th><th>Amen</th><th>Comfort</th><th>Total</th></tr></thead><tbody>
+<tr>
+<td>1. CYV - Perfect for a family getaway!</td>
+<td><div class="bar price"><span style="width:62.2%"></span><b>62</b></div></td>
+<td><div class="bar trust"><span style="width:96.8%"></span><b>97</b></div></td>
+<td><div class="bar fit"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar loc"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar amen"><span style="width:60.0%"></span><b>60</b></div></td>
+<td><div class="bar comfort"><span style="width:83.2%"></span><b>83</b></div></td>
+<td><strong>84.9</strong></td>
+</tr>
+<tr>
+<td>2. Beautiful townhouse with pool &amp; two terraces</td>
+<td><div class="bar price"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar trust"><span style="width:66.6%"></span><b>67</b></div></td>
+<td><div class="bar fit"><span style="width:92.5%"></span><b>92</b></div></td>
+<td><div class="bar loc"><span style="width:60.0%"></span><b>60</b></div></td>
+<td><div class="bar amen"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar comfort"><span style="width:80.0%"></span><b>80</b></div></td>
+<td><strong>83.2</strong></td>
+</tr>
+<tr>
+<td>3. Niza6-Sea Views-3bedr-2bath-300Mb-Center</td>
+<td><div class="bar price"><span style="width:79.3%"></span><b>79</b></div></td>
+<td><div class="bar trust"><span style="width:73.9%"></span><b>74</b></div></td>
+<td><div class="bar fit"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar loc"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar amen"><span style="width:20.0%"></span><b>20</b></div></td>
+<td><div class="bar comfort"><span style="width:83.2%"></span><b>83</b></div></td>
+<td><strong>79.5</strong></td>
+</tr>
+<tr>
+<td>4. Casa Moret</td>
+<td><div class="bar price"><span style="width:84.5%"></span><b>84</b></div></td>
+<td><div class="bar trust"><span style="width:51.6%"></span><b>52</b></div></td>
+<td><div class="bar fit"><span style="width:92.5%"></span><b>92</b></div></td>
+<td><div class="bar loc"><span style="width:90.0%"></span><b>90</b></div></td>
+<td><div class="bar amen"><span style="width:80.0%"></span><b>80</b></div></td>
+<td><div class="bar comfort"><span style="width:80.8%"></span><b>81</b></div></td>
+<td><strong>78.1</strong></td>
+</tr>
+<tr>
+<td>5. Malibu Mansions Grand SeaLine</td>
+<td><div class="bar price"><span style="width:89.7%"></span><b>90</b></div></td>
+<td><div class="bar trust"><span style="width:58.5%"></span><b>58</b></div></td>
+<td><div class="bar fit"><span style="width:88.0%"></span><b>88</b></div></td>
+<td><div class="bar loc"><span style="width:70.0%"></span><b>70</b></div></td>
+<td><div class="bar amen"><span style="width:70.0%"></span><b>70</b></div></td>
+<td><div class="bar comfort"><span style="width:92.0%"></span><b>92</b></div></td>
+<td><strong>76.8</strong></td>
+</tr>
+<tr>
+<td>6. Balconies of Benalmádena - Seaviews Duplex Carvajal</td>
+<td><div class="bar price"><span style="width:62.0%"></span><b>62</b></div></td>
+<td><div class="bar trust"><span style="width:56.8%"></span><b>57</b></div></td>
+<td><div class="bar fit"><span style="width:80.5%"></span><b>80</b></div></td>
+<td><div class="bar loc"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar amen"><span style="width:70.0%"></span><b>70</b></div></td>
+<td><div class="bar comfort"><span style="width:72.0%"></span><b>72</b></div></td>
+<td><strong>71.4</strong></td>
+</tr>
+<tr>
+<td>7. El Sembrador | Pool - terrace - pool table</td>
+<td><div class="bar price"><span style="width:65.1%"></span><b>65</b></div></td>
+<td><div class="bar trust"><span style="width:51.0%"></span><b>51</b></div></td>
+<td><div class="bar fit"><span style="width:95.5%"></span><b>96</b></div></td>
+<td><div class="bar loc"><span style="width:50.0%"></span><b>50</b></div></td>
+<td><div class="bar amen"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar comfort"><span style="width:93.8%"></span><b>94</b></div></td>
+<td><strong>70.3</strong></td>
+</tr>
+<tr>
+<td>8. Palm Beach - Family Home, Pool, Stunning Sea Views</td>
+<td><div class="bar price"><span style="width:19.6%"></span><b>20</b></div></td>
+<td><div class="bar trust"><span style="width:77.0%"></span><b>77</b></div></td>
+<td><div class="bar fit"><span style="width:95.5%"></span><b>96</b></div></td>
+<td><div class="bar loc"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar amen"><span style="width:60.0%"></span><b>60</b></div></td>
+<td><div class="bar comfort"><span style="width:90.2%"></span><b>90</b></div></td>
+<td><strong>68.8</strong></td>
+</tr>
+<tr>
+<td>9. Modern 3 bedroom apt. with big terrace</td>
+<td><div class="bar price"><span style="width:78.4%"></span><b>78</b></div></td>
+<td><div class="bar trust"><span style="width:25.0%"></span><b>25</b></div></td>
+<td><div class="bar fit"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar loc"><span style="width:70.0%"></span><b>70</b></div></td>
+<td><div class="bar amen"><span style="width:70.0%"></span><b>70</b></div></td>
+<td><div class="bar comfort"><span style="width:83.2%"></span><b>83</b></div></td>
+<td><strong>67.5</strong></td>
+</tr>
+<tr>
+<td>10. Marbella Coastal Paradise</td>
+<td><div class="bar price"><span style="width:44.5%"></span><b>44</b></div></td>
+<td><div class="bar trust"><span style="width:51.7%"></span><b>52</b></div></td>
+<td><div class="bar fit"><span style="width:92.5%"></span><b>92</b></div></td>
+<td><div class="bar loc"><span style="width:40.0%"></span><b>40</b></div></td>
+<td><div class="bar amen"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar comfort"><span style="width:85.2%"></span><b>85</b></div></td>
+<td><strong>62.8</strong></td>
+</tr>
+<tr>
+<td>11. Ref: 272 Luxury semidetached property near La Cala</td>
+<td><div class="bar price"><span style="width:0.0%"></span><b>0</b></div></td>
+<td><div class="bar trust"><span style="width:56.4%"></span><b>56</b></div></td>
+<td><div class="bar fit"><span style="width:100.0%"></span><b>100</b></div></td>
+<td><div class="bar loc"><span style="width:70.0%"></span><b>70</b></div></td>
+<td><div class="bar amen"><span style="width:50.0%"></span><b>50</b></div></td>
+<td><div class="bar comfort"><span style="width:96.5%"></span><b>96</b></div></td>
+<td><strong>54.4</strong></td>
+</tr></tbody></table></div>
+</section>
+<section class="section" id="picks">
+<h2>Top picks by use case</h2>
+<div class="grid use-grid"><article class="use"><h3>Best overall</h3><p><strong>CYV - Perfect for a family getaway!</strong></p><p>Highest v2 composite score with coastal location, strong trust, and best fit for 5.</p></article><article class="use"><h3>Best data-backed pick</h3><p><strong>Palm Beach - Family Home, Pool, Stunning Sea Views</strong></p><p>Highest review count in the set; ranked lower mainly because of price/value.</p></article><article class="use"><h3>Best value</h3><p><strong>Beautiful townhouse with pool &amp; two terraces</strong></p><p>Lowest nightly price and strong amenities, but only 2 reviews.</p></article><article class="use"><h3>Best comfort/layout</h3><p><strong>Ref: 272 Luxury semidetached property near La Cala</strong></p><p>Strong comfort score, but high price suppresses total ranking.</p></article><article class="use"><h3>Best coastal/convenience</h3><p><strong>CYV - Perfect for a family getaway!</strong></p><p>Fuengirola location with the strongest overall score.</p></article><article class="use"><h3>Best luxury/view</h3><p><strong>Marbella Coastal Paradise</strong></p><p>Best luxury/scenic profile, but weaker value and location convenience.</p></article><article class="use"><h3>Safest pick</h3><p><strong>CYV - Perfect for a family getaway!</strong></p><p>Best mix of score, fit, reviews, and coastal convenience.</p></article><article class="use"><h3>Highest-risk despite good score</h3><p><strong>Beautiful townhouse with pool &amp; two terraces</strong></p><p>Great value, but review count is too low to treat it as proven.</p></article></div>
+</section>
+<section class="section">
+<h2>Tiered recommendations</h2>
+<div class="tiers">
+<div class="tier"><h3>💎 Top pick</h3><ul><li>CYV - Perfect for a family getaway! · 84.9</li><li>Beautiful townhouse with pool &amp; two terraces · 83.2</li><li>Niza6-Sea Views-3bedr-2bath-300Mb-Center · 79.5</li></ul></div>
+<div class="tier"><h3>⭐ Strong</h3><ul><li>Casa Moret · 78.1</li><li>Malibu Mansions Grand SeaLine · 76.8</li><li>Balconies of Benalmádena - Seaviews Duplex Carvajal · 71.4</li></ul></div>
+<div class="tier"><h3>👍 Consider</h3><ul><li>El Sembrador | Pool - terrace - pool table · 70.3</li><li>Palm Beach - Family Home, Pool, Stunning Sea Views · 68.8</li><li>Modern 3 bedroom apt. with big terrace · 67.5</li></ul></div>
+<div class="tier"><h3>⏭ Skip</h3><ul><li>Marbella Coastal Paradise · 62.8</li><li>Ref: 272 Luxury semidetached property near La Cala · 54.4</li></ul></div>
+</div>
+</section>
+<section class="section" id="properties">
+<h2>Property cards</h2>
+<section class="property-card top" id="room-1188349782094075289">
+<div class="property-hero">
+<img alt="CYV - Perfect for a family getaway!" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1188349782094075289/original/cf3ad7bb-f10a-4848-9b64-4aab8d81bb09.jpeg"/>
+<div class="rank-badge">#1</div>
+</div>
+<div class="property-body">
+<div class="property-title-row">
+<div>
+<h3>CYV - Perfect for a family getaway!</h3>
+<p>Fuengirola · coastal / town-oriented</p>
+</div>
+<div class="score-circle">84.9</div>
+</div>
+<div class="stats-grid">
+<span><b>$314</b><small>/night</small></span><span><b>$2,197</b><small>total cost</small></span>
+<span><b>$63</b><small>/person/night</small></span>
+<span><b>5.00</b><small>rating</small></span>
+<span><b>21</b><small>reviews</small></span>
+<span><b>3</b><small>bedrooms</small></span>
+<span><b>5</b><small>beds</small></span>
+<span><b>2.0</b><small>baths</small></span>
+<span><b>6</b><small>capacity</small></span>
+</div>
+<div class="score-mini">
+<label>Price <div class="bar price"><span style="width:62.2%"></span><b>62</b></div></label>
+<label>Trust <div class="bar trust"><span style="width:96.8%"></span><b>97</b></div></label>
+<label>Fit <div class="bar fit"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Location <div class="bar loc"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Amenities <div class="bar amen"><span style="width:60.0%"></span><b>60</b></div></label>
+<label>Comfort <div class="bar comfort"><span style="width:83.2%"></span><b>83</b></div></label>
+</div>
+<p class="desc">3 bedrooms 2 baths totally refurbished apartment in the heart of Fuengirola. Near to everything. Yes, EVERYTHING. ;)&lt;br /&gt;The whole group will enjoy easy access to every kind of need from this centrally located place. Enjoy the city vibe but also the calm on the balcony. The pool area is small but very cozy and welcoming. &lt;br /&gt;&lt;br /&gt;You can park around t…</p>
+<div class="amenities"><span class="amenity yes">Pool: Yes</span><span class="amenity yes">A/C: Yes</span><span class="amenity no">Parking: No</span><span class="amenity no">Self check-in: No</span><span class="amenity yes">Workspace: Yes</span><span class="amenity yes">Washer: Yes</span><span class="amenity yes">Wi-Fi: Yes</span></div>
+<details>
+<summary>Sleeping setup, integrity notes, and link</summary>
+<ul><li>Sleeping arrangement not captured in enriched data.</li></ul>
+<p><strong>Score integrity:</strong> no free parking flag</p>
+<p><strong>Host:</strong> Neili · Superhost: Yes · Host reviews: 214</p>
+<p><strong>Check-in/out:</strong> 4:00 PM / 11:00 AM</p>
+<p><a href="https://www.airbnb.com/rooms/1188349782094075289?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006275110537&amp;source_impression_id=p3_1778638798_P37wB_4qWjMAj5Jy&amp;previous_page_section_name=1000">Open Airbnb listing</a></p>
+</details>
+</div>
+</section>
+<section class="property-card top" id="room-1605105730916504202">
+<div class="property-hero">
+<img alt="Beautiful townhouse with pool &amp; two terraces" src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-1605105730916504202/original/0b16fb5c-f98e-41e3-9b27-4094d4191ebd.jpeg"/>
+<div class="rank-badge">#2</div>
+</div>
+<div class="property-body">
+<div class="property-title-row">
+<div>
+<h3>Beautiful townhouse with pool &amp; two terraces</h3>
+<p>Urbanización Mijas Golf · inland golf / resort</p>
+</div>
+<div class="score-circle">83.2</div>
+</div>
+<div class="stats-grid">
+<span><b>$236</b><small>/night</small></span><span><b>$1,655</b><small>total cost</small></span>
+<span><b>$47</b><small>/person/night</small></span>
+<span><b>5.00</b><small>rating</small></span>
+<span><b>2</b><small>reviews</small></span>
+<span><b>3</b><small>bedrooms</small></span>
+<span><b>3</b><small>beds</small></span>
+<span><b>2.0</b><small>baths</small></span>
+<span><b>6</b><small>capacity</small></span>
+</div>
+<div class="score-mini">
+<label>Price <div class="bar price"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Trust <div class="bar trust"><span style="width:66.6%"></span><b>67</b></div></label>
+<label>Fit <div class="bar fit"><span style="width:92.5%"></span><b>92</b></div></label>
+<label>Location <div class="bar loc"><span style="width:60.0%"></span><b>60</b></div></label>
+<label>Amenities <div class="bar amen"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Comfort <div class="bar comfort"><span style="width:80.0%"></span><b>80</b></div></label>
+</div>
+<p class="desc">This beautiful townhouse has 3 floors and has been designed with quality, comfort and style in mind. &lt;br /&gt;&lt;br /&gt;All bedrooms have blackout blinds and comfortable beds. There's air con/heating throughout the house and high speed Wi-fi.  &lt;br /&gt;&lt;br /&gt;Downstairs the split-level kitchen, dining room and living room, lead to a large sunny patio with outdoor di…</p>
+<div class="amenities"><span class="amenity yes">Pool: Yes</span><span class="amenity yes">A/C: Yes</span><span class="amenity yes">Parking: Yes</span><span class="amenity yes">Self check-in: Yes</span><span class="amenity yes">Workspace: Yes</span><span class="amenity yes">Washer: Yes</span><span class="amenity yes">Wi-Fi: Yes</span></div>
+<details>
+<summary>Sleeping setup, integrity notes, and link</summary>
+<ul><li><b>Bedroom 1</b>: 1 king bed</li><li><b>Bedroom 2</b>: 1 double bed</li><li><b>Bedroom 3</b>: 1 double bed</li></ul>
+<p><strong>Score integrity:</strong> trust capped at 70: 1-4 reviews; -10 car-dependent/secluded clue; low review count; &lt;5 beds: likely bed-sharing for 5 adults</p>
+<p><strong>Host:</strong> Verano Property Management · Superhost: Yes · Host reviews: 489</p>
+<p><strong>Check-in/out:</strong> 4:00 PM / 11:00 AM</p>
+<p><a href="https://www.airbnb.com/rooms/1605105730916504202?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006307397512&amp;source_impression_id=p3_1778638798_P3Ut7S-YrzAA9AvJ&amp;previous_page_section_name=1000">Open Airbnb listing</a></p>
+</details>
+</div>
+</section>
+<section class="property-card top" id="room-1278397911981871497">
+<div class="property-hero">
+<img alt="Niza6-Sea Views-3bedr-2bath-300Mb-Center" src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-1278397911981871497/original/2e802a75-6fd2-47ea-9b7a-0b918f67bd66.jpeg"/>
+<div class="rank-badge">#3</div>
+</div>
+<div class="property-body">
+<div class="property-title-row">
+<div>
+<h3>Niza6-Sea Views-3bedr-2bath-300Mb-Center</h3>
+<p>Fuengirola · coastal / town-oriented</p>
+</div>
+<div class="score-circle">79.5</div>
+</div>
+<div class="stats-grid">
+<span><b>$279</b><small>/night</small></span><span><b>$1,952</b><small>total cost</small></span>
+<span><b>$56</b><small>/person/night</small></span>
+<span><b>4.75</b><small>rating</small></span>
+<span><b>8</b><small>reviews</small></span>
+<span><b>3</b><small>bedrooms</small></span>
+<span><b>5</b><small>beds</small></span>
+<span><b>2.0</b><small>baths</small></span>
+<span><b>6</b><small>capacity</small></span>
+</div>
+<div class="score-mini">
+<label>Price <div class="bar price"><span style="width:79.3%"></span><b>79</b></div></label>
+<label>Trust <div class="bar trust"><span style="width:73.9%"></span><b>74</b></div></label>
+<label>Fit <div class="bar fit"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Location <div class="bar loc"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Amenities <div class="bar amen"><span style="width:20.0%"></span><b>20</b></div></label>
+<label>Comfort <div class="bar comfort"><span style="width:83.2%"></span><b>83</b></div></label>
+</div>
+<p class="desc">Apartment Description&lt;br&gt;- Area: 100 m²&lt;br&gt;- Bedrooms: 3&lt;br&gt;- Bathrooms: 2 - Newly renovated&lt;br&gt;- Terrace/Balcony: 1 terrace - 15m2&lt;br&gt;- Capacity: Up to 6 guests - No children allowed. (Community issues)&lt;br&gt;- 6th Floor&lt;br&gt;- Sea views&lt;br&gt;&lt;br&gt;---&lt;br&gt;&lt;br&gt; Facilities and Services&lt;br&gt;- WiFi: Free&lt;br&gt;- Kitchen: Fridge, freezer, oven, microwave, kettle, coffee m…</p>
+<div class="amenities"><span class="amenity no">Pool: No</span><span class="amenity yes">A/C: Yes</span><span class="amenity no">Parking: No</span><span class="amenity no">Self check-in: No</span><span class="amenity no">Workspace: No</span><span class="amenity yes">Washer: Yes</span><span class="amenity yes">Wi-Fi: Yes</span></div>
+<details>
+<summary>Sleeping setup, integrity notes, and link</summary>
+<ul><li>Sleeping arrangement not captured in enriched data.</li></ul>
+<p><strong>Score integrity:</strong> +10 strong proximity/centrality clue; no free parking flag</p>
+<p><strong>Host:</strong> Jesus · Superhost: Yes · Host reviews: 312</p>
+<p><strong>Check-in/out:</strong> 3:00 PM / 11:00 AM</p>
+<p><a href="https://www.airbnb.com/rooms/1278397911981871497?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006303525898&amp;source_impression_id=p3_1778638798_P3tA7DbF3445JjVe&amp;previous_page_section_name=1000">Open Airbnb listing</a></p>
+</details>
+</div>
+</section>
+<section class="property-card strong" id="room-1424543657122979738">
+<div class="property-hero">
+<img alt="Casa Moret" src="https://a0.muscache.com/im/pictures/miso/Hosting-1424543657122979738/original/aa1e2c0e-4331-4127-90a8-d3597e9a9c94.jpeg"/>
+<div class="rank-badge">#4</div>
+</div>
+<div class="property-body">
+<div class="property-title-row">
+<div>
+<h3>Casa Moret</h3>
+<p>Málaga · coastal / town-oriented</p>
+</div>
+<div class="score-circle">78.1</div>
+</div>
+<div class="stats-grid">
+<span><b>$268</b><small>/night</small></span><span><b>$1,877</b><small>total cost</small></span>
+<span><b>$54</b><small>/person/night</small></span>
+<span><b>5.00</b><small>rating</small></span>
+<span><b>2</b><small>reviews</small></span>
+<span><b>3</b><small>bedrooms</small></span>
+<span><b>3</b><small>beds</small></span>
+<span><b>3.0</b><small>baths</small></span>
+<span><b>6</b><small>capacity</small></span>
+</div>
+<div class="score-mini">
+<label>Price <div class="bar price"><span style="width:84.5%"></span><b>84</b></div></label>
+<label>Trust <div class="bar trust"><span style="width:51.6%"></span><b>52</b></div></label>
+<label>Fit <div class="bar fit"><span style="width:92.5%"></span><b>92</b></div></label>
+<label>Location <div class="bar loc"><span style="width:90.0%"></span><b>90</b></div></label>
+<label>Amenities <div class="bar amen"><span style="width:80.0%"></span><b>80</b></div></label>
+<label>Comfort <div class="bar comfort"><span style="width:80.8%"></span><b>81</b></div></label>
+</div>
+<p class="desc">Stylish 3-bed semi-detached home in La Cala Golf Resort with private garden, panoramic mountain views, and modern comforts. Enjoy 3 spacious bedrooms with terraces, bright living room, enclosed outdoor lounge with BBQ, fully equipped kitchen, AC, underfloor heated bathrooms, smart TV, and high-speed WiFi. Set in the exclusive Monte Alto community with 2 p…</p>
+<div class="amenities"><span class="amenity yes">Pool: Yes</span><span class="amenity yes">A/C: Yes</span><span class="amenity yes">Parking: Yes</span><span class="amenity no">Self check-in: No</span><span class="amenity yes">Workspace: Yes</span><span class="amenity yes">Washer: Yes</span><span class="amenity yes">Wi-Fi: Yes</span></div>
+<details>
+<summary>Sleeping setup, integrity notes, and link</summary>
+<ul><li>Sleeping arrangement not captured in enriched data.</li></ul>
+<p><strong>Score integrity:</strong> trust capped at 70: 1-4 reviews; -10 car-dependent/secluded clue; low review count; &lt;5 beds: likely bed-sharing for 5 adults</p>
+<p><strong>Host:</strong> Pascale · Superhost: No · Host reviews: 8</p>
+<p><strong>Check-in/out:</strong> 3:00 PM / 11:00 AM</p>
+<p><a href="https://www.airbnb.com/rooms/1424543657122979738?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006277953899&amp;source_impression_id=p3_1778638798_P3D-Qc9P966eso6k&amp;previous_page_section_name=1000">Open Airbnb listing</a></p>
+</details>
+</div>
+</section>
+<section class="property-card strong" id="room-1460113447564258436">
+<div class="property-hero">
+<img alt="Malibu Mansions Grand SeaLine" src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-1460113447564258436/original/d60438bb-1ac0-457a-a444-a5fd325c9356.jpeg"/>
+<div class="rank-badge">#5</div>
+</div>
+<div class="property-body">
+<div class="property-title-row">
+<div>
+<h3>Malibu Mansions Grand SeaLine</h3>
+<p>Las Lagunas · inland golf / resort</p>
+</div>
+<div class="score-circle">76.8</div>
+</div>
+<div class="stats-grid">
+<span><b>$257</b><small>/night</small></span><span><b>$1,802</b><small>total cost</small></span>
+<span><b>$51</b><small>/person/night</small></span>
+<span><b>4.77</b><small>rating</small></span>
+<span><b>31</b><small>reviews</small></span>
+<span><b>2</b><small>bedrooms</small></span>
+<span><b>5</b><small>beds</small></span>
+<span><b>3.0</b><small>baths</small></span>
+<span><b>6</b><small>capacity</small></span>
+</div>
+<div class="score-mini">
+<label>Price <div class="bar price"><span style="width:89.7%"></span><b>90</b></div></label>
+<label>Trust <div class="bar trust"><span style="width:58.5%"></span><b>58</b></div></label>
+<label>Fit <div class="bar fit"><span style="width:88.0%"></span><b>88</b></div></label>
+<label>Location <div class="bar loc"><span style="width:70.0%"></span><b>70</b></div></label>
+<label>Amenities <div class="bar amen"><span style="width:70.0%"></span><b>70</b></div></label>
+<label>Comfort <div class="bar comfort"><span style="width:92.0%"></span><b>92</b></div></label>
+</div>
+<p class="desc">Discover a perfect retreat for families and couples in this charming house located in Mijas Costa, a destination that combines tranquility and comfort. With an area of 106 square meters, this accommodation offers a cozy and fully equipped space to enjoy an unforgettable vacation.&lt;br /&gt;&lt;br /&gt;With its private jacuzzi on the terrace, you can enjoy these wond…</p>
+<div class="amenities"><span class="amenity yes">Pool: Yes</span><span class="amenity yes">A/C: Yes</span><span class="amenity yes">Parking: Yes</span><span class="amenity no">Self check-in: No</span><span class="amenity no">Workspace: No</span><span class="amenity yes">Washer: Yes</span><span class="amenity yes">Wi-Fi: Yes</span></div>
+<details>
+<summary>Sleeping setup, integrity notes, and link</summary>
+<ul><li>Sleeping arrangement not captured in enriched data.</li></ul>
+<p><strong>Score integrity:</strong> No major scoring caution beyond missing final checkout breakdown.</p>
+<p><strong>Host:</strong> Alfresco Stays · Superhost: No · Host reviews: 3438</p>
+<p><strong>Check-in/out:</strong> 4:00 PM / 10:00 AM</p>
+<p><a href="https://www.airbnb.com/rooms/1460113447564258436?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006303528609&amp;source_impression_id=p3_1778638798_P39bCaJOCPok4OjC&amp;previous_page_section_name=1000">Open Airbnb listing</a></p>
+</details>
+</div>
+</section>
+<section class="property-card strong" id="room-1178909654309486711">
+<div class="property-hero">
+<img alt="Balconies of Benalmádena - Seaviews Duplex Carvajal" src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-1178909654309486711/original/89b374b7-2d16-4d71-bda7-13c54f250a2c.jpeg"/>
+<div class="rank-badge">#6</div>
+</div>
+<div class="property-body">
+<div class="property-title-row">
+<div>
+<h3>Balconies of Benalmádena - Seaviews Duplex Carvajal</h3>
+<p>Benalmádena · coastal / town-oriented</p>
+</div>
+<div class="score-circle">71.4</div>
+</div>
+<div class="stats-grid">
+<span><b>$314</b><small>/night</small></span><span><b>$2,199</b><small>total cost</small></span>
+<span><b>$63</b><small>/person/night</small></span>
+<span><b>4.88</b><small>rating</small></span>
+<span><b>16</b><small>reviews</small></span>
+<span><b>2</b><small>bedrooms</small></span>
+<span><b>3</b><small>beds</small></span>
+<span><b>2.0</b><small>baths</small></span>
+<span><b>6</b><small>capacity</small></span>
+</div>
+<div class="score-mini">
+<label>Price <div class="bar price"><span style="width:62.0%"></span><b>62</b></div></label>
+<label>Trust <div class="bar trust"><span style="width:56.8%"></span><b>57</b></div></label>
+<label>Fit <div class="bar fit"><span style="width:80.5%"></span><b>80</b></div></label>
+<label>Location <div class="bar loc"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Amenities <div class="bar amen"><span style="width:70.0%"></span><b>70</b></div></label>
+<label>Comfort <div class="bar comfort"><span style="width:72.0%"></span><b>72</b></div></label>
+</div>
+<p class="desc">The apartment in Benalmádena has 2 bedroom(s) and capacity for 6 people. Cosy and fully equipped 98 m² accommodation, with sea views. It is located 300 m from "Carvajal Beach" sandy beach, 21 km from "Málaga Airport" and is situated in an ideal area for families and by the sea.</p>
+<div class="amenities"><span class="amenity yes">Pool: Yes</span><span class="amenity yes">A/C: Yes</span><span class="amenity yes">Parking: Yes</span><span class="amenity no">Self check-in: No</span><span class="amenity no">Workspace: No</span><span class="amenity yes">Washer: Yes</span><span class="amenity yes">Wi-Fi: Yes</span></div>
+<details>
+<summary>Sleeping setup, integrity notes, and link</summary>
+<ul><li>Sleeping arrangement not captured in enriched data.</li></ul>
+<p><strong>Score integrity:</strong> trust capped at 85: 5-19 reviews without dual badge; +10 strong proximity/centrality clue; &lt;5 beds: likely bed-sharing for 5 adults; late check-in fee; community/external works disclaimer</p>
+<p><strong>Host:</strong> Mojo · Superhost: No · Host reviews: 978</p>
+<p><strong>Check-in/out:</strong> 5:00 PM / 10:00 AM</p>
+<p><a href="https://www.airbnb.com/rooms/1178909654309486711?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006307400625&amp;source_impression_id=p3_1778638798_P31dzMq10j6P39NX&amp;previous_page_section_name=1000">Open Airbnb listing</a></p>
+</details>
+</div>
+</section>
+<section class="property-card consider" id="room-785201940144131637">
+<div class="property-hero">
+<img alt="El Sembrador | Pool - terrace - pool table" src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-785201940144131637/original/118dfc8b-f620-4d84-b3e3-994d4dafcbf0.jpeg"/>
+<div class="rank-badge">#7</div>
+</div>
+<div class="property-body">
+<div class="property-title-row">
+<div>
+<h3>El Sembrador | Pool - terrace - pool table</h3>
+<p>Mijas · inland golf / resort</p>
+</div>
+<div class="score-circle">70.3</div>
+</div>
+<div class="stats-grid">
+<span><b>$308</b><small>/night</small></span><span><b>$2,155</b><small>total cost</small></span>
+<span><b>$62</b><small>/person/night</small></span>
+<span><b>4.62</b><small>rating</small></span>
+<span><b>26</b><small>reviews</small></span>
+<span><b>3</b><small>bedrooms</small></span>
+<span><b>4</b><small>beds</small></span>
+<span><b>3.5</b><small>baths</small></span>
+<span><b>6</b><small>capacity</small></span>
+</div>
+<div class="score-mini">
+<label>Price <div class="bar price"><span style="width:65.1%"></span><b>65</b></div></label>
+<label>Trust <div class="bar trust"><span style="width:51.0%"></span><b>51</b></div></label>
+<label>Fit <div class="bar fit"><span style="width:95.5%"></span><b>96</b></div></label>
+<label>Location <div class="bar loc"><span style="width:50.0%"></span><b>50</b></div></label>
+<label>Amenities <div class="bar amen"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Comfort <div class="bar comfort"><span style="width:93.8%"></span><b>94</b></div></label>
+</div>
+<p class="desc">El Sembrador – Spacious Multi-Level home with Terrace in Mijas&lt;br /&gt;&lt;br /&gt;Welcome to El Sembrador, a spacious and unique accommodation in Mijas, perfect for a relaxing and unforgettable holiday on the Costa del Sol. With its multi-level layout, generous living spaces, and great amenities, this home is ideal for families or groups looking for comfort and c…</p>
+<div class="amenities"><span class="amenity yes">Pool: Yes</span><span class="amenity yes">A/C: Yes</span><span class="amenity yes">Parking: Yes</span><span class="amenity yes">Self check-in: Yes</span><span class="amenity yes">Workspace: Yes</span><span class="amenity yes">Washer: Yes</span><span class="amenity yes">Wi-Fi: Yes</span></div>
+<details>
+<summary>Sleeping setup, integrity notes, and link</summary>
+<ul><li><b>Bedroom 1</b>: 1 double bed</li><li><b>Bedroom 2</b>: 2 single beds</li><li><b>Bedroom 3</b>: 1 double bed</li></ul>
+<p><strong>Score integrity:</strong> -10 car-dependent/secluded clue; &lt;5 beds: likely bed-sharing for 5 adults</p>
+<p><strong>Host:</strong> ViVi Homes · Superhost: No · Host reviews: 2507</p>
+<p><strong>Check-in/out:</strong> 4:00 PM / 11:00 AM</p>
+<p><a href="https://www.airbnb.com/rooms/785201940144131637?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006307393870&amp;source_impression_id=p3_1778638798_P3y4TjIsLXLzyTit&amp;previous_page_section_name=1000">Open Airbnb listing</a></p>
+</details>
+</div>
+</section>
+<section class="property-card consider" id="room-750570804201491684">
+<div class="property-hero">
+<img alt="Palm Beach - Family Home, Pool, Stunning Sea Views" src="https://a0.muscache.com/im/pictures/miso/Hosting-750570804201491684/original/3ed8a6a3-91a5-4d66-afe8-a9328bdca666.jpeg"/>
+<div class="rank-badge">#8</div>
+</div>
+<div class="property-body">
+<div class="property-title-row">
+<div>
+<h3>Palm Beach - Family Home, Pool, Stunning Sea Views</h3>
+<p>Fuengirola · coastal / town-oriented</p>
+</div>
+<div class="score-circle">68.8</div>
+</div>
+<div class="stats-grid">
+<span><b>$401</b><small>/night</small></span><span><b>$2,807</b><small>total cost</small></span>
+<span><b>$80</b><small>/person/night</small></span>
+<span><b>4.84</b><small>rating</small></span>
+<span><b>44</b><small>reviews</small></span>
+<span><b>3</b><small>bedrooms</small></span>
+<span><b>4</b><small>beds</small></span>
+<span><b>2.5</b><small>baths</small></span>
+<span><b>6</b><small>capacity</small></span>
+</div>
+<div class="score-mini">
+<label>Price <div class="bar price"><span style="width:19.6%"></span><b>20</b></div></label>
+<label>Trust <div class="bar trust"><span style="width:77.0%"></span><b>77</b></div></label>
+<label>Fit <div class="bar fit"><span style="width:95.5%"></span><b>96</b></div></label>
+<label>Location <div class="bar loc"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Amenities <div class="bar amen"><span style="width:60.0%"></span><b>60</b></div></label>
+<label>Comfort <div class="bar comfort"><span style="width:90.2%"></span><b>90</b></div></label>
+</div>
+<p class="desc">Palm beach caters to the most demanding guests, that would like to spend a relaxed and luxurious holiday. &lt;br /&gt;&lt;br /&gt;Located in the top of a hill, the views will leave you speachless. &lt;br /&gt;&lt;br /&gt;The home offers private parking, pool, 3 bedrooms, 2 bathrooms, amplious terraces, bbq, and more... &lt;br /&gt;&lt;br /&gt;Don't forget to book in advance this lovely drea…</p>
+<div class="amenities"><span class="amenity yes">Pool: Yes</span><span class="amenity yes">A/C: Yes</span><span class="amenity no">Parking: No</span><span class="amenity no">Self check-in: No</span><span class="amenity yes">Workspace: Yes</span><span class="amenity yes">Washer: Yes</span><span class="amenity yes">Wi-Fi: Yes</span></div>
+<details>
+<summary>Sleeping setup, integrity notes, and link</summary>
+<ul><li><b>Bedroom 1</b>: 1 king bed</li><li><b>Bedroom 2</b>: 1 king bed</li><li><b>Bedroom 3</b>: 2 single beds</li></ul>
+<p><strong>Score integrity:</strong> +10 strong proximity/centrality clue; -10 car-dependent/secluded clue; &lt;5 beds: likely bed-sharing for 5 adults; late check-in fee; no free parking flag</p>
+<p><strong>Host:</strong> Lyx · Superhost: Yes · Host reviews: 1431</p>
+<p><strong>Check-in/out:</strong> 4:00 PM / 10:00 AM</p>
+<p><a href="https://www.airbnb.com/rooms/750570804201491684?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006275103768&amp;source_impression_id=p3_1778638798_P3m8BB9JTYApGqgZ&amp;previous_page_section_name=1000">Open Airbnb listing</a></p>
+</details>
+</div>
+</section>
+<section class="property-card consider" id="room-1595210191680500953">
+<div class="property-hero">
+<img alt="Modern 3 bedroom apt. with big terrace" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1595210191680500953/original/98546b8b-e7ce-4986-b4f7-67baf65f5094.jpeg"/>
+<div class="rank-badge">#9</div>
+</div>
+<div class="property-body">
+<div class="property-title-row">
+<div>
+<h3>Modern 3 bedroom apt. with big terrace</h3>
+<p>Las Lagunas · inland / near Fuengirola</p>
+</div>
+<div class="score-circle">67.5</div>
+</div>
+<div class="stats-grid">
+<span><b>$281</b><small>/night</small></span><span><b>$1,964</b><small>total cost</small></span>
+<span><b>$56</b><small>/person/night</small></span>
+<span><b>nan</b><small>rating</small></span>
+<span><b>0</b><small>reviews</small></span>
+<span><b>3</b><small>bedrooms</small></span>
+<span><b>5</b><small>beds</small></span>
+<span><b>2.0</b><small>baths</small></span>
+<span><b>6</b><small>capacity</small></span>
+</div>
+<div class="score-mini">
+<label>Price <div class="bar price"><span style="width:78.4%"></span><b>78</b></div></label>
+<label>Trust <div class="bar trust"><span style="width:25.0%"></span><b>25</b></div></label>
+<label>Fit <div class="bar fit"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Location <div class="bar loc"><span style="width:70.0%"></span><b>70</b></div></label>
+<label>Amenities <div class="bar amen"><span style="width:70.0%"></span><b>70</b></div></label>
+<label>Comfort <div class="bar comfort"><span style="width:83.2%"></span><b>83</b></div></label>
+</div>
+<p class="desc">This elegant apartment with a huge terrace is the perfect way for you to spend your days, whether it is for business or leisure.&lt;br /&gt;&lt;br /&gt;You can enjoy the calmness of the terrace. Supermarkets and restaurants are just around the corner and you can prepare your favourite meal in the perfectly designed kitchen.&lt;br /&gt;&lt;br /&gt;You will find comfortable beds a…</p>
+<div class="amenities"><span class="amenity yes">Pool: Yes</span><span class="amenity yes">A/C: Yes</span><span class="amenity yes">Parking: Yes</span><span class="amenity no">Self check-in: No</span><span class="amenity no">Workspace: No</span><span class="amenity yes">Washer: Yes</span><span class="amenity yes">Wi-Fi: Yes</span></div>
+<details>
+<summary>Sleeping setup, integrity notes, and link</summary>
+<ul><li>Sleeping arrangement not captured in enriched data.</li></ul>
+<p><strong>Score integrity:</strong> trust capped at 50: no reviews; no reviews</p>
+<p><strong>Host:</strong> Petri · Superhost: No · Host reviews: 332</p>
+<p><strong>Check-in/out:</strong> 3:00 PM / 11:00 AM</p>
+<p><a href="https://www.airbnb.com/rooms/1595210191680500953?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006301446551&amp;source_impression_id=p3_1778638798_P33-2HGQH38qJ61o&amp;previous_page_section_name=1000">Open Airbnb listing</a></p>
+</details>
+</div>
+</section>
+<section class="property-card skip" id="room-1305534133273592582">
+<div class="property-hero">
+<img alt="Marbella Coastal Paradise" src="https://a0.muscache.com/im/pictures/miso/Hosting-1305534133273592582/original/a69921bf-9d89-4893-a27a-829bea91dddb.jpeg"/>
+<div class="rank-badge">#10</div>
+</div>
+<div class="property-body">
+<div class="property-title-row">
+<div>
+<h3>Marbella Coastal Paradise</h3>
+<p>Ojén · inland golf / resort</p>
+</div>
+<div class="score-circle">62.8</div>
+</div>
+<div class="stats-grid">
+<span><b>$350</b><small>/night</small></span><span><b>$2,450</b><small>total cost</small></span>
+<span><b>$70</b><small>/person/night</small></span>
+<span><b>4.89</b><small>rating</small></span>
+<span><b>9</b><small>reviews</small></span>
+<span><b>3</b><small>bedrooms</small></span>
+<span><b>3</b><small>beds</small></span>
+<span><b>2.5</b><small>baths</small></span>
+<span><b>6</b><small>capacity</small></span>
+</div>
+<div class="score-mini">
+<label>Price <div class="bar price"><span style="width:44.5%"></span><b>44</b></div></label>
+<label>Trust <div class="bar trust"><span style="width:51.7%"></span><b>52</b></div></label>
+<label>Fit <div class="bar fit"><span style="width:92.5%"></span><b>92</b></div></label>
+<label>Location <div class="bar loc"><span style="width:40.0%"></span><b>40</b></div></label>
+<label>Amenities <div class="bar amen"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Comfort <div class="bar comfort"><span style="width:85.2%"></span><b>85</b></div></label>
+</div>
+<p class="desc">This exclusive apartment stands apart with its breathtaking 252 sqm of luxurious space, harmonizing Andalusian charm with modern elegance. Located in the tranquil heights of La Mairena, this is a rare find offering unparalleled panoramic views of the Mediterranean and Marbella's coastline, all while ensuring complete privacy and serenity.</p>
+<div class="amenities"><span class="amenity yes">Pool: Yes</span><span class="amenity yes">A/C: Yes</span><span class="amenity yes">Parking: Yes</span><span class="amenity yes">Self check-in: Yes</span><span class="amenity yes">Workspace: Yes</span><span class="amenity yes">Washer: Yes</span><span class="amenity yes">Wi-Fi: Yes</span></div>
+<details>
+<summary>Sleeping setup, integrity notes, and link</summary>
+<ul><li><b>Bedroom 1</b>: 1 king bed</li><li><b>Bedroom 2</b>: 1 queen bed</li><li><b>Bedroom 3</b>: 1 sofa bed</li></ul>
+<p><strong>Score integrity:</strong> trust capped at 85: 5-19 reviews without dual badge; +10 strong proximity/centrality clue; -10 car-dependent/secluded clue; &lt;5 beds: likely bed-sharing for 5 adults</p>
+<p><strong>Host:</strong> Marbella Superhost · Superhost: No · Host reviews: 47</p>
+<p><strong>Check-in/out:</strong> 3:00 PM / 10:00 AM</p>
+<p><a href="https://www.airbnb.com/rooms/1305534133273592582?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006307402963&amp;source_impression_id=p3_1778638798_P3F8DxPDjja-vPaJ&amp;previous_page_section_name=1000">Open Airbnb listing</a></p>
+</details>
+</div>
+</section>
+<section class="property-card skip" id="room-1081643090971595034">
+<div class="property-hero">
+<img alt="Ref: 272 Luxury semidetached property near La Cala" src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-1081643090971595034/original/63ec63da-d793-422f-b3d0-57716814d51f.jpeg"/>
+<div class="rank-badge">#11</div>
+</div>
+<div class="property-body">
+<div class="property-title-row">
+<div>
+<h3>Ref: 272 Luxury semidetached property near La Cala</h3>
+<p>Mijas · inland golf / resort</p>
+</div>
+<div class="score-circle">54.4</div>
+</div>
+<div class="stats-grid">
+<span><b>$441</b><small>/night</small></span><span><b>$3,088</b><small>total cost</small></span>
+<span><b>$88</b><small>/person/night</small></span>
+<span><b>4.92</b><small>rating</small></span>
+<span><b>13</b><small>reviews</small></span>
+<span><b>3</b><small>bedrooms</small></span>
+<span><b>6</b><small>beds</small></span>
+<span><b>2.5</b><small>baths</small></span>
+<span><b>6</b><small>capacity</small></span>
+</div>
+<div class="score-mini">
+<label>Price <div class="bar price"><span style="width:0.0%"></span><b>0</b></div></label>
+<label>Trust <div class="bar trust"><span style="width:56.4%"></span><b>56</b></div></label>
+<label>Fit <div class="bar fit"><span style="width:100.0%"></span><b>100</b></div></label>
+<label>Location <div class="bar loc"><span style="width:70.0%"></span><b>70</b></div></label>
+<label>Amenities <div class="bar amen"><span style="width:50.0%"></span><b>50</b></div></label>
+<label>Comfort <div class="bar comfort"><span style="width:96.5%"></span><b>96</b></div></label>
+</div>
+<p class="desc">High-quality superior luxury house, terraced, near La Cala de Mijas with 3 bedrooms and capacity for 7 people (maximum 6 adults). Very close to the sea&lt;br&gt;This luxurious and modern complex has recently been completed and offers parking (2 private spaces), communal swimming pool, tennis court and gym/fitness centre.</p>
+<div class="amenities"><span class="amenity yes">Pool: Yes</span><span class="amenity yes">A/C: Yes</span><span class="amenity no">Parking: No</span><span class="amenity no">Self check-in: No</span><span class="amenity no">Workspace: No</span><span class="amenity yes">Washer: Yes</span><span class="amenity yes">Wi-Fi: Yes</span></div>
+<details>
+<summary>Sleeping setup, integrity notes, and link</summary>
+<ul><li><b>Bedroom 1</b>: 1 queen bed</li><li><b>Bedroom 2</b>: 2 single beds</li><li><b>Bedroom 3</b>: 2 single beds</li><li><b>Living room</b>: 1 sofa bed</li></ul>
+<p><strong>Score integrity:</strong> trust capped at 85: 5-19 reviews without dual badge; +10 strong proximity/centrality clue; no free parking flag</p>
+<p><strong>Host:</strong> Felicity Sol Rentals · Superhost: No · Host reviews: 1408</p>
+<p><strong>Check-in/out:</strong> 4:00 PM / 10:00 AM</p>
+<p><a href="https://www.airbnb.com/rooms/1081643090971595034?adults=5&amp;check_in=2026-06-27&amp;check_out=2026-07-04&amp;children=0&amp;infants=0&amp;pets=0&amp;wishlist_item_id=11006303510568&amp;source_impression_id=p3_1778638798_P36WCkIFL1eoovjR&amp;previous_page_section_name=1000">Open Airbnb listing</a></p>
+</details>
+</div>
+</section>
+</section>
+<section class="section" id="notes">
+<h2>What moved vs v1</h2><p class="muted-note">Total cost is the visible 7-night listing total captured from the search results; it may not include final checkout taxes, service fees, or cleaning-fee changes.</p>
+<div class="table-wrap"><table><thead><tr><th>Property</th><th>V1</th><th>V2</th><th>Move</th><th>Main note</th></tr></thead><tbody>
+<tr><td>CYV - Perfect for a family getaway!</td><td>1</td><td>1</td><td>0</td><td>no free parking flag</td></tr>
+<tr><td>Beautiful townhouse with pool &amp; two terraces</td><td>2</td><td>2</td><td>0</td><td>trust capped at 70: 1-4 reviews</td></tr>
+<tr><td>Niza6-Sea Views-3bedr-2bath-300Mb-Center</td><td>5</td><td>3</td><td>+2</td><td>+10 strong proximity/centrality clue</td></tr>
+<tr><td>Casa Moret</td><td>3</td><td>4</td><td>-1</td><td>trust capped at 70: 1-4 reviews</td></tr>
+<tr><td>Malibu Mansions Grand SeaLine</td><td>4</td><td>5</td><td>-1</td><td>stable</td></tr>
+<tr><td>Balconies of Benalmádena - Seaviews Duplex Carvajal</td><td>7</td><td>6</td><td>+1</td><td>trust capped at 85: 5-19 reviews without dual badge</td></tr>
+<tr><td>El Sembrador | Pool - terrace - pool table</td><td>6</td><td>7</td><td>-1</td><td>-10 car-dependent/secluded clue</td></tr>
+<tr><td>Palm Beach - Family Home, Pool, Stunning Sea Views</td><td>8</td><td>8</td><td>0</td><td>+10 strong proximity/centrality clue</td></tr>
+<tr><td>Modern 3 bedroom apt. with big terrace</td><td>9</td><td>9</td><td>0</td><td>trust capped at 50: no reviews</td></tr>
+<tr><td>Marbella Coastal Paradise</td><td>10</td><td>10</td><td>0</td><td>trust capped at 85: 5-19 reviews without dual badge</td></tr>
+<tr><td>Ref: 272 Luxury semidetached property near La Cala</td><td>11</td><td>11</td><td>0</td><td>trust capped at 85: 5-19 reviews without dual badge</td></tr>
+</tbody></table></div>
+</section>
+<section class="section">
+<h2>Score integrity notes</h2>
+<div class="checklist"><ul class="notes-list"><li><strong>CYV - Perfect for a family getaway!:</strong> no free parking flag</li><li><strong>Beautiful townhouse with pool &amp; two terraces:</strong> trust capped at 70: 1-4 reviews; -10 car-dependent/secluded clue; low review count; &lt;5 beds: likely bed-sharing for 5 adults</li><li><strong>Niza6-Sea Views-3bedr-2bath-300Mb-Center:</strong> +10 strong proximity/centrality clue; no free parking flag</li><li><strong>Casa Moret:</strong> trust capped at 70: 1-4 reviews; -10 car-dependent/secluded clue; low review count; &lt;5 beds: likely bed-sharing for 5 adults</li><li><strong>Malibu Mansions Grand SeaLine:</strong> No major scoring caution beyond missing final checkout breakdown.</li><li><strong>Balconies of Benalmádena - Seaviews Duplex Carvajal:</strong> trust capped at 85: 5-19 reviews without dual badge; +10 strong proximity/centrality clue; &lt;5 beds: likely bed-sharing for 5 adults; late check-in fee; community/external works disclaimer</li><li><strong>El Sembrador | Pool - terrace - pool table:</strong> -10 car-dependent/secluded clue; &lt;5 beds: likely bed-sharing for 5 adults</li><li><strong>Palm Beach - Family Home, Pool, Stunning Sea Views:</strong> +10 strong proximity/centrality clue; -10 car-dependent/secluded clue; &lt;5 beds: likely bed-sharing for 5 adults; late check-in fee; no free parking flag</li><li><strong>Modern 3 bedroom apt. with big terrace:</strong> trust capped at 50: no reviews; no reviews</li><li><strong>Marbella Coastal Paradise:</strong> trust capped at 85: 5-19 reviews without dual badge; +10 strong proximity/centrality clue; -10 car-dependent/secluded clue; &lt;5 beds: likely bed-sharing for 5 adults</li><li><strong>Ref: 272 Luxury semidetached property near La Cala:</strong> trust capped at 85: 5-19 reviews without dual badge; +10 strong proximity/centrality clue; no free parking flag</li></ul></div>
+</section>
+<section class="section" id="verify">
+<h2>Verify before booking</h2>
+<div class="checklist"><ol><li>Confirm final all-in checkout price, including service fee, cleaning fee, taxes, and any deposit.</li><li>Confirm exact sleeping setup for 5 adults, especially properties with fewer than 5 beds.</li><li>Confirm A/C works in bedrooms, not just common areas.</li><li>Confirm pool access dates/hours and whether it is private or shared.</li><li>Confirm free parking and whether a car is realistically required.</li><li>Confirm check-in/check-out flexibility and late check-in fees.</li><li>Confirm walking distance to beach/restaurants rather than relying on city labels.</li><li>Review cancellation policy and house rules before booking.</li></ol></div>
+</section>
+<section class="section callout">
+<h2>Scoring model</h2>
+<p><strong>Weights:</strong> Price 25%, Trust 25%, Fit 20%, Location 15%, Amenities 10%, Comfort/Layout 5%. Photo confidence is a red flag only if PDP picture count is under 15.</p>
+<p><strong>Trust caps:</strong> 0 reviews max 50, 1–4 reviews max 70, 5–19 reviews max 85 unless dual-badge. This prevents low-review 5.0 listings from looking more proven than they are.</p>
+<p><strong>Pricing caveat:</strong> The report uses visible listing total/nightly price from scraped data. It does not include final checkout fees, service fees, taxes, or deposits.</p>
+</section>
+</main>
+<footer class="footer">Generated 2026-05-13T03:17:45Z · Source: merged v2 scored properties + enriched Airbnb listing data · HTML/CSS only.</footer>
+</body>
+</html>
